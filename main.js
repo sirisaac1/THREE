@@ -57,6 +57,32 @@ const gridHelper = new THREE.GridHelper( 200, 50);
 const controls = new OrbitControls( camera, renderer.domElement ); //update in animate function
 scene.add( lightHelper, gridHelper );
 
+// THIS SECTION IS FOR GRASS
+
+const grassBladeGeometry = new THREE.PlaneGeometry(0.1, 0.5); // small plane for a grass blade
+const grassBladeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
+
+// Create an InstancedMesh
+const grassBladesCount = 100000; // Number of grass blades
+const grass = new THREE.InstancedMesh(grassBladeGeometry, grassBladeMaterial, grassBladesCount);
+
+const dummy = new THREE.Object3D(); // Helper object for positioning
+
+for (let i = 0; i < grassBladesCount; i++) {
+  // Randomly place each blade in the scene
+  dummy.position.set(
+    (Math.random() - 0.5) * 500,
+    0,
+    (Math.random() - 0.5) * 500
+  );
+  dummy.rotation.y = Math.random() * Math.PI; // Random rotation for each blade
+  dummy.updateMatrix();
+
+  grass.setMatrixAt(i, dummy.matrix);
+}
+
+scene.add(grass);
+
 // Continuously animates the page
 function animate() {
   requestAnimationFrame( animate );
