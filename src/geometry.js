@@ -1,47 +1,95 @@
 import * as THREE from 'three';
 
-function addGeometry( scene ) {
-  // squidward hedron
-  const hedron = new THREE.IcosahedronGeometry( 10 );
-  const textureLoader = new THREE.TextureLoader();
-  const squidTexture = textureLoader.load( '../textures/squid.jpg' );
-  const squidMaterial = new THREE.MeshLambertMaterial({ map: squidTexture });
-  const squidHedron = new THREE.Mesh( hedron, squidMaterial );
-  squidHedron.position.set( 40, 40, -40 );
-  // Set texture repetition
-  squidTexture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
-  squidTexture.wrapT = THREE.RepeatWrapping; // Repeat vertically
-  squidTexture.repeat.set( 10, 10 ); // Repeat the texture 10 times in each direction
-  
+const textureLoader = new THREE.TextureLoader();
+const stageTexture = textureLoader.load( '../textures/ground.jpg' );
+const textureFront = textureLoader.load( '../textures/front.jpg' );
+const textureBack = textureLoader.load( '../textures/back.jpg' );
+const textureLeft = textureLoader.load( '../textures/left.jpg' );
+const textureRight = textureLoader.load( '../textures/right.jpg' );
+const squidTexture = textureLoader.load( '../textures/squid.jpg' );
+const devinTexture = textureLoader.load( '../textures/devin.jpg')
+const tristanTexture = textureLoader.load( '../textures/tristanFourtyHands.jpg' );
+const rylanTexture = textureLoader.load( '../textures/rylanChocolate.jpg' );
 
-  scene.add( squidHedron );
+// Squidward Hedron
+const hedron = new THREE.IcosahedronGeometry( 20 );
+const squidMaterial = new THREE.MeshLambertMaterial( { map: squidTexture } );
+export const squidHedron = new THREE.Mesh( hedron, squidMaterial ); 
+squidTexture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
+squidTexture.wrapT = THREE.RepeatWrapping; // Repeat vertically
+squidTexture.repeat.set( 8, 8 ); // Repeat the texture 10 times in each direction
+squidHedron.position.set( 50, 30, -50 );
 
-  const plane = new THREE.PlaneGeometry( 500, 500, 10, 10 );
-  const stageTexture = textureLoader.load( '../textures/ground.jpg' );
-  const stageMaterial = new THREE.MeshLambertMaterial({ map: stageTexture });
-  const stage = new THREE.Mesh( plane, stageMaterial )
-  stage.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X axis, planes are XY by default
-  stageTexture.wrapS = THREE.RepeatWrapping;
-  stageTexture.wrapT = THREE.RepeatWrapping;
-  stageTexture.repeat.set( 9, 9 );
+//Rylan Cube
+const cube = new THREE.BoxGeometry( 10, 10, 10 );
+const rylanMaterial = new THREE.MeshLambertMaterial( { map: rylanTexture } );
+export const rylanCube = new THREE.Mesh( cube, rylanMaterial );
 
+// Devin Torus
+const torusGeometry = new THREE.TorusGeometry( 10, 10, 16, 100 ); 
+const torusMaterial = new THREE.MeshLambertMaterial( { map: devinTexture  } ); 
+export const devinTorus = new THREE.Mesh( torusGeometry, torusMaterial );
+devinTexture.wrapS = THREE.RepeatWrapping;
+devinTexture.wrapT = THREE.RepeatWrapping;
+devinTexture.repeat.set( 2, 2 );
+devinTorus.position.set( 0, 50, -75 ) ;
+
+// Tristan Capsule
+const tristanGeometry = new THREE.CapsuleGeometry( 15, 15, 10, 20 );
+const tristanMaterial = new THREE.MeshLambertMaterial( { map: tristanTexture } );
+export const tristanTweakin = new THREE.Mesh( tristanGeometry, tristanMaterial );
+tristanTexture.wrapS = THREE.RepeatWrapping;
+tristanTexture.wrapT = THREE.RepeatWrapping;
+tristanTexture.repeat.set( 2, 1 );
+tristanTweakin.position.set( -60, 20, -60 );
+tristanTweakin.rotation.y = 90
+
+// Ground Plane
+const plane = new THREE.PlaneGeometry( 700, 500, 10, 10 );
+const stageMaterial = new THREE.MeshLambertMaterial( { map: stageTexture } );
+const stage = new THREE.Mesh( plane, stageMaterial )
+stageTexture.wrapS = THREE.RepeatWrapping;
+stageTexture.wrapT = THREE.RepeatWrapping;
+stageTexture.repeat.set( 9, 9 );
+stage.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X axis, planes are XY by default
+
+// Create the walls
+const planeSize = 500; // Adjust this for the size of the walls
+
+// Front wall
+const frontGeometry = new THREE.PlaneGeometry( planeSize, planeSize );
+const frontMaterial = new THREE.MeshBasicMaterial( { map: textureFront } );
+const frontPlane = new THREE.Mesh( frontGeometry, frontMaterial );
+frontPlane.position.set( 0, planeSize / 2, -planeSize / 2 );
+
+// Back wall
+const backGeometry = new THREE.PlaneGeometry( planeSize, planeSize );
+const backMaterial = new THREE.MeshBasicMaterial( { map: textureBack } );
+const backPlane = new THREE.Mesh( backGeometry, backMaterial );
+backPlane.position.set( 0, planeSize / 2, planeSize / 2 );
+backPlane.rotation.y = Math.PI; // Rotate the back wall
+
+// Left wall
+const leftGeometry = new THREE.PlaneGeometry( planeSize, planeSize );
+const leftMaterial = new THREE.MeshBasicMaterial( { map: textureLeft } );
+const leftPlane = new THREE.Mesh( leftGeometry, leftMaterial );
+leftPlane.position.set( -planeSize / 2, planeSize / 2, 0 );
+leftPlane.rotation.y = Math.PI / 2; // Rotate left wall
+
+// Right wall
+const rightGeometry = new THREE.PlaneGeometry( planeSize, planeSize );
+const rightMaterial = new THREE.MeshBasicMaterial( { map: textureRight } );
+const rightPlane = new THREE.Mesh( rightGeometry, rightMaterial );
+rightPlane.position.set( planeSize / 2, planeSize / 2, 0 );
+rightPlane.rotation.y = -Math.PI / 2; // Rotate right wall
+
+export function addGeometry( scene ) {
   scene.add( stage );
-
-  // Grass instancing
-  const grassBladeGeometry = new THREE.PlaneGeometry( 0.1, 0.5 );
-  const grassBladeMaterial = new THREE.MeshBasicMaterial({ color: 0x006400, side: THREE.DoubleSide });
-  const grassBladesCount = 100000;
-  const grass = new THREE.InstancedMesh( grassBladeGeometry, grassBladeMaterial, grassBladesCount );
-  const dummy = new THREE.Object3D();
-
-  for ( let i = 0; i < grassBladesCount; i++ ) {
-    dummy.position.set( ( Math.random() - 0.5 ) * 500, 0, ( Math.random() - 0.5 ) * 500 );
-    dummy.rotation.y = Math.random() * Math.PI;
-    dummy.updateMatrix();
-    grass.setMatrixAt( i, dummy.matrix );
-  }
-
-  scene.add( grass );
+  scene.add( squidHedron );
+  scene.add( devinTorus );
+  scene.add( tristanTweakin );
+  scene.add( frontPlane );
+  scene.add( backPlane );
+  scene.add( leftPlane );
+  scene.add( rightPlane );
 }
-
-export { addGeometry };

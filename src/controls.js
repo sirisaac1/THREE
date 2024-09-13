@@ -4,10 +4,12 @@ import { camera, renderer } from './scene.js';
 const controls = new OrbitControls( camera, renderer.domElement );
 
 function updateControls() {
+  controls.enabled = true;
   controls.update();
 }
 
-function toggleOrbitCamera() {
-  orbitCameraEnabled = !orbitCameraEnabled;
+function stopControls() {
+  controls.enabled = false;
 }
-export { controls, updateControls, toggleOrbitCamera };
+
+export { controls, updateControls,stopControls };

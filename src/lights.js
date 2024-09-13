@@ -10,8 +10,6 @@ function addLights( scene ) {
 
   scene.add( pointLight, ambientLight );
   
-
-  
   const lightHelper = new THREE.PointLightHelper( pointLight );
 
   scene.add( lightHelper );
