@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import * as cannon from 'cannon';
 import {Howl, Howler} from 'howler';
+import GUI from 'lil-gui'; 
 
 import { scene, camera, renderer, updateCameraPosition } from './scene.js';
 import { addLights } from './lights.js';
@@ -37,7 +38,7 @@ function playSound() {
 
 // Set a timeout to play the sound 2 seconds after the page loads
 window.addEventListener('load', () => {
-  setTimeout(playSound, 1000); // 2000 milliseconds = 2 seconds
+  setTimeout(playSound, 1000); 
 });
 
 const keys = {
@@ -69,9 +70,9 @@ var movementEnabled = false;
 export function buttonClicked() {
   movementEnabled = true;
   const music = new Howl({
-    src: ['../sounds/cake.mp3'],
+    src: ['../sounds/Hotline Bling - Drake low quality.mp3'],
     html5: true,
-    volume: 1,
+    volume: 0.5,
   });
   console.log('Unstoppable agony has commenced');
   music.play();
@@ -100,25 +101,51 @@ export function handleMovement() {
 }
 
 // INIT GUI
-const gui = new dat.GUI();
+dat.GUI.TEXT_OPEN = "expand";
+dat.GUI.TEXT_CLOSED = "minimize";
+const datgui = new dat.GUI();
 
-const guiContainer = gui.domElement.parentElement;
-guiContainer.classList.add('dat-gui-container');
+var swag = 0;
 
-function moveGUIToTopLeft() {
-  guiContainer.style.transform = 'translate(0, 0)'; // Move to top-left
-  guiContainer.style.opacity = '1';
+function moveGUItoTopLeft() {
+  console.log("swag state: " + swag);
+  if (swag == 1) {
+    moveGUItoMiddle();
+    return;
+  }
+  guiContainer.style.position = 'absolute'; // Ensure it's positioned absolutely
+  guiContainer.style.top = '0'; // Align to the top
+  guiContainer.style.left = '0'; // Align to the left
+  guiContainer.style.transform = 'none'; // Reset any previous transforms
+  guiContainer.style.opacity = '1'; // Set opacity to 1
+  console.log("move to right")
+  
+  swag = 1;
+  console.log("swag status :" + swag);
 }
 
-const closeButton = document.querySelector('.close-button'); // Adjust selector based on your close button
-if (closeButton) {
-  closeButton.addEventListener('click', moveGUIToTopLeft);
+function moveGUItoMiddle() {
+  guiContainer.style.transform = 'translate(-50%, -50%)'; // Centering the element
+  guiContainer.style.position = 'absolute'; // Make sure the position is absolute
+  guiContainer.style.top = '50%'; // Position from the top
+  guiContainer.style.left = '50%'; // Position from the left
+  console.log("Move to middle")
+  swag = 0;
+  console.log("swag status: " + swag);
 }
 
-const openButton = document.querySelector('.open-button');
-if (openButton) {
-  openButton.addEventListener('click', moveGUItoMiddle)
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const closeButton = document.querySelector('.close-button');
+  if (closeButton) {
+    closeButton.addEventListener('click', moveGUItoTopLeft);
+  }
+
+  const openButton = document.querySelector('.open-button');
+  if (openButton) {
+    openButton.addEventListener('click', moveGUItoMiddle);
+  }
+});
+ 
 // Ensure the positioning is adjusted after resizing
 setTimeout(() => {
     const guiWidth = guiContainer.offsetWidth;
@@ -132,7 +159,7 @@ const startButton = {
   button: () => buttonClicked()
 };
 
-gui.add( startButton, 'button' ).name( 'Click to start' );  
+datgui.add( startButton, 'button' ).name( 'Click to start' );  
 
 let orbitCameraEnabled = true;
 
@@ -145,7 +172,7 @@ const devModeButton = {
   button: () => toggleOrbitCamera()
 };
 
-gui.add( devModeButton, 'button' ).name( 'Toggle Orbit Camera' );  
+datgui.add( devModeButton, 'button' ).name( 'Toggle Orbit Camera' );
 
 // TODO
 // Use physics engines like Cannon.js, Ammo.js, or Oimo.js

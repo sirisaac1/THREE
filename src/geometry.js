@@ -10,6 +10,26 @@ const squidTexture = textureLoader.load( '../textures/squid.jpg' );
 const devinTexture = textureLoader.load( '../textures/devin.jpg')
 const tristanTexture = textureLoader.load( '../textures/tristanFourtyHands.jpg' );
 const rylanTexture = textureLoader.load( '../textures/rylanChocolate.jpg' );
+const gabeTexture = textureLoader.load( '../textures/gabeHead.jpg' );
+const chanTexture = textureLoader.load( '../textures/chanWoke.jpg' );
+
+// GabeLathe
+const points = [];
+for ( let i = 0; i < 10; i ++ ) {
+	points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+}
+const lathe = new THREE.LatheGeometry( points );
+const gabeMaterial = new THREE.MeshLambertMaterial( { map: gabeTexture } );
+export const gabeLathe = new THREE.Mesh( lathe, gabeMaterial );
+gabeLathe.position.set( 50, 30, 20 ) ;
+gabeLathe.rotation.y = 90;
+
+// ChanPrism
+const prism = new THREE.IcosahedronGeometry( 40 );
+const chanMaterial = new THREE.MeshLambertMaterial( { map: chanTexture } );
+export const chanPrism = new THREE.Mesh( prism, chanMaterial );
+chanPrism.position.set( -50, 40, 70 );
+chanPrism.rotation.y = 280;
 
 // Squidward Hedron
 const hedron = new THREE.IcosahedronGeometry( 20 );
@@ -42,7 +62,7 @@ tristanTexture.wrapS = THREE.RepeatWrapping;
 tristanTexture.wrapT = THREE.RepeatWrapping;
 tristanTexture.repeat.set( 2, 1 );
 tristanTweakin.position.set( -60, 20, -60 );
-tristanTweakin.rotation.y = 90
+tristanTweakin.rotation.y = 90;
 
 // Ground Plane
 const plane = new THREE.PlaneGeometry( 700, 500, 10, 10 );
@@ -88,6 +108,8 @@ export function addGeometry( scene ) {
   scene.add( squidHedron );
   scene.add( devinTorus );
   scene.add( tristanTweakin );
+  scene.add( chanPrism );
+  scene.add( gabeLathe );
   scene.add( frontPlane );
   scene.add( backPlane );
   scene.add( leftPlane );

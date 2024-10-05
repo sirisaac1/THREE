@@ -3,10 +3,13 @@ canvas {
   top: 0;
   left: 0;
 }
-.dat-gui-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1.5); /* Center and scale up */
-  transition: transform 0.5s ease;
+#dat-gui {
+  position: absolute; /* Make it absolutely positioned */
+  top: 50%;          /* Center vertically */
+  left: 50%;         /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for its own width and height */
+  width: 80vw;       /* Width of the GUI (80% of the viewport width) */
+  height: 80vh;      /* Height of the GUI (80% of the viewport height) */
+  overflow: auto;    /* Allow scrolling if content overflows */
+  z-index: 9999;     /* Bring it to the front */
 }
